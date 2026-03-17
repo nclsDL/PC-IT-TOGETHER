@@ -1,83 +1,145 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Send } from "lucide-react";
+import { Mail, ArrowRight } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="bg-navy text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-          {/* Logo & Subscribe */}
-          <div className="lg:col-span-1">
-            <Link href="/" className="inline-block mb-4">
-              <Image src="/logo.png" alt="PC-IT-TOGETHER" width={240} height={60} className="h-14 w-auto brightness-0 invert" />
-            </Link>
-            <p className="text-sm text-gray-400 mb-2">Subscribe</p>
-            <p className="text-xs text-gray-400 mb-3">Get 10% off your first order</p>
-            <div className="flex">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 bg-transparent border border-gray-600 rounded-l-md px-3 py-2 text-sm focus:outline-none focus:border-brand"
-              />
-              <button className="bg-transparent border border-l-0 border-gray-600 rounded-r-md px-3 hover:bg-brand hover:border-brand transition-colors">
-                <Send className="h-4 w-4" />
+    <footer>
+      {/* Newsletter CTA — Double Bezel */}
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="p-[3px] rounded-[2rem] ring-1 ring-white/10 -mb-[88px] relative z-10">
+          <div className="bg-hunter-green-800 rounded-[calc(2rem-3px)] px-8 sm:px-16 py-12 flex flex-col lg:flex-row items-center justify-between gap-10 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+            <h2 className="font-display text-[32px] lg:text-[42px] font-bold text-white leading-[1.05] max-w-[550px] tracking-[-0.02em]">
+              STAY UP TO DATE ABOUT OUR LATEST OFFERS
+            </h2>
+            <div className="flex flex-col gap-3.5 w-full max-w-[360px]">
+              <div className="p-[2px] rounded-full bg-white/10 ring-1 ring-white/10">
+                <div className="bg-white rounded-full flex items-center gap-3 px-5 py-3">
+                  <Mail className="h-5 w-5 text-dust-grey-300 shrink-0" strokeWidth={1.5} />
+                  <input
+                    type="email"
+                    placeholder="Enter your email address"
+                    className="flex-1 text-[15px] bg-transparent outline-none placeholder:text-dust-grey-300"
+                  />
+                </div>
+              </div>
+              <button className="group bg-white text-dust-grey-900 font-medium text-[15px] rounded-full py-3.5 px-6 flex items-center justify-center gap-2 hover:bg-dust-grey-50 active:scale-[0.98] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]">
+                Subscribe to Newsletter
+                <ArrowRight className="h-4 w-4 opacity-40 group-hover:translate-x-0.5 group-hover:opacity-70 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]" strokeWidth={1.5} />
               </button>
             </div>
-          </div>
-
-          {/* Support */}
-          <div>
-            <h3 className="font-semibold mb-4">Support</h3>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li>Manila, Philippines</li>
-              <li>support@pcittogether.com</li>
-              <li>+63 912-345-6789</li>
-            </ul>
-          </div>
-
-          {/* Account */}
-          <div>
-            <h3 className="font-semibold mb-4">Account</h3>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li><Link href="/login" className="hover:text-brand transition-colors">My Account</Link></li>
-              <li><Link href="/login" className="hover:text-brand transition-colors">Login / Register</Link></li>
-              <li><Link href="/cart" className="hover:text-brand transition-colors">Cart</Link></li>
-              <li><Link href="/wishlist" className="hover:text-brand transition-colors">Wishlist</Link></li>
-              <li><Link href="/products" className="hover:text-brand transition-colors">Shop</Link></li>
-            </ul>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h3 className="font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li><Link href="#" className="hover:text-brand transition-colors">Privacy Policy</Link></li>
-              <li><Link href="#" className="hover:text-brand transition-colors">Terms of Use</Link></li>
-              <li><Link href="#" className="hover:text-brand transition-colors">FAQ</Link></li>
-              <li><Link href="/contact" className="hover:text-brand transition-colors">Contact</Link></li>
-            </ul>
-          </div>
-
-          {/* Why PC-IT-TOGETHER? */}
-          <div>
-            <h3 className="font-semibold mb-4">Why PC-IT-TOGETHER?</h3>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li>Real-time compatibility checking</li>
-              <li>Curated PC components</li>
-              <li>Easy PC builder tool</li>
-              <li>Secure PayPal checkout</li>
-            </ul>
           </div>
         </div>
       </div>
 
-      {/* Social Icons & Copyright */}
-      <div className="border-t border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <p className="text-sm text-gray-500 text-center">
-            © Copyright PC-IT-TOGETHER 2025. All rights reserved.
-          </p>
+      {/* Footer Content */}
+      <div className="bg-surface pt-[130px] pb-14">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col lg:flex-row gap-14 lg:gap-0 lg:justify-between">
+            {/* Brand */}
+            <div className="max-w-[260px]">
+              <Link href="/" className="block mb-6">
+                <Image src="/logo.png" alt="PC-IT-TOGETHER" width={160} height={40} className="h-10 w-auto" />
+              </Link>
+              <p className="text-[15px] text-dust-grey-500 leading-[1.7] mb-8">
+                We have the best PC components for your dream build. From budget to enthusiast, every part you need.
+              </p>
+              <div className="flex items-center gap-2.5">
+                {["X", "f", "ig", "gh"].map((label) => (
+                  <a
+                    key={label}
+                    href="#"
+                    className="w-8 h-8 rounded-full bg-black/[0.04] ring-1 ring-black/[0.04] flex items-center justify-center text-[11px] font-semibold text-dust-grey-500 hover:bg-brand hover:text-white hover:ring-brand active:scale-[0.95] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
+                  >
+                    {label}
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Links */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 lg:gap-16">
+              {[
+                {
+                  title: "Company",
+                  links: [
+                    { label: "About", href: "/about" },
+                    { label: "Products", href: "/products" },
+                    { label: "PC Builder", href: "/build" },
+                    { label: "Contact", href: "/contact" },
+                  ],
+                },
+                {
+                  title: "Help",
+                  links: [
+                    { label: "Customer Support", href: "/contact" },
+                    { label: "Delivery Details", href: "#" },
+                    { label: "Terms & Conditions", href: "#" },
+                    { label: "Privacy Policy", href: "#" },
+                  ],
+                },
+                {
+                  title: "FAQ",
+                  links: [
+                    { label: "Account", href: "/login" },
+                    { label: "Manage Deliveries", href: "#" },
+                    { label: "Orders", href: "#" },
+                    { label: "Payments", href: "#" },
+                  ],
+                },
+                {
+                  title: "Resources",
+                  links: [
+                    { label: "PC Builder Guide", href: "/build" },
+                    { label: "Build Tutorials", href: "#" },
+                    { label: "How to - Blog", href: "#" },
+                    { label: "YouTube Channel", href: "#" },
+                  ],
+                },
+              ].map((section) => (
+                <div key={section.title}>
+                  <h3 className="font-medium text-dust-grey-900 text-[13px] tracking-[0.15em] uppercase mb-7">
+                    {section.title}
+                  </h3>
+                  <ul className="space-y-4">
+                    {section.links.map((link) => (
+                      <li key={link.label}>
+                        <Link
+                          href={link.href}
+                          className="text-[15px] text-dust-grey-500 hover:text-dust-grey-900 transition-colors duration-300"
+                        >
+                          {link.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Bottom */}
+          <div className="h-px bg-gradient-to-r from-transparent via-dust-grey-200 to-transparent mt-14 mb-7" />
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-sm text-dust-grey-400">
+              PC-IT-TOGETHER &copy; 2024-2025, All Rights Reserved
+            </p>
+            <div className="flex items-center gap-2.5">
+              {[
+                { label: "VISA", color: "text-[#1434CB]" },
+                { label: "MC", color: "text-[#EB001B]" },
+                { label: "PayPal", color: "text-[#179BD7]" },
+                { label: "GPay", color: "text-dust-grey-600" },
+              ].map((badge) => (
+                <div
+                  key={badge.label}
+                  className={`h-[30px] px-3 bg-white rounded-lg flex items-center justify-center ring-1 ring-black/[0.04] text-[10px] font-bold ${badge.color}`}
+                >
+                  {badge.label}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </footer>

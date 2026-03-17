@@ -1,14 +1,22 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
 import { capturePayPalPayment } from "@/lib/paypal";
 import { prisma, withRetry } from "@/lib/db";
+import { syncUser } from "@/lib/supabase/sync-user";
 
 export async function POST(request: Request) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    // Ensure user exists in Prisma database
+    await syncUser(user);
 
     const { orderId, items } = await request.json();
 
@@ -31,7 +39,7 @@ export async function POST(request: Request) {
       const order = await withRetry(() =>
         prisma.order.create({
           data: {
-            userId: session.user.id,
+            userId: user.id,
             total,
             status: "COMPLETED",
             paypalOrderId: orderId,

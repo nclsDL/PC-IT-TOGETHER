@@ -2,11 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, ShoppingCart, Star } from "lucide-react";
+import { Heart } from "lucide-react";
 import { useCartStore } from "@/store/cart-store";
 import { useWishlistStore } from "@/store/wishlist-store";
 import { toast } from "sonner";
 import { formatPrice } from "@/lib/utils";
+import { StarRating } from "@/components/ui/star-rating";
 
 interface ProductCardProps {
   id: string;
@@ -29,8 +30,6 @@ export function ProductCard({
   salePrice,
   images,
   rating,
-  reviewCount,
-  isFlashDeal,
   badge,
 }: ProductCardProps) {
   const addItem = useCartStore((s) => s.addItem);
@@ -41,19 +40,9 @@ export function ProductCard({
     ? Math.round(((price - salePrice) / price) * 100)
     : 0;
 
-  const handleAddToCart = () => {
-    addItem({
-      id,
-      name,
-      price,
-      salePrice,
-      image: images[0] || "/placeholder.svg",
-      slug,
-    });
-    toast.success(`${name} added to cart`);
-  };
-
-  const handleToggleWishlist = () => {
+  const handleToggleWishlist = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     toggleItem({
       id,
       name,
@@ -62,103 +51,76 @@ export function ProductCard({
       image: images[0] || "/placeholder.svg",
       slug,
       rating,
-      reviewCount,
+      reviewCount: 0,
     });
-    toast.success(inWishlist ? `Removed from wishlist` : `Added to wishlist`);
+    toast.success(inWishlist ? "Removed from wishlist" : "Added to wishlist");
   };
 
   return (
-    <div className="group block">
-      <div className="relative bg-white border border-gray-100 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
-        {/* Badges */}
-        <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
-          {isFlashDeal && (
-            <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded">
-              SALE
-            </span>
-          )}
-          {badge && (
-            <span className="bg-brand text-white text-[10px] font-bold px-2 py-0.5 rounded">
-              {badge}
-            </span>
-          )}
-          {discount > 0 && !isFlashDeal && (
-            <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded">
-              -{discount}%
-            </span>
-          )}
-        </div>
-
-        {/* Actions */}
-        <div className="absolute top-2 right-2 z-10 flex flex-col gap-1.5">
-          <button
-            onClick={handleToggleWishlist}
-            className={`p-1.5 rounded-full bg-white shadow-sm hover:bg-gray-50 transition-colors ${
-              inWishlist ? "text-red-500" : "text-gray-400"
-            }`}
-          >
-            <Heart className="h-4 w-4" fill={inWishlist ? "currentColor" : "none"} />
-          </button>
-        </div>
-
-        {/* Image */}
-        <Link href={`/products/${slug}`}>
-          <div className="relative h-48 bg-gray-50 flex items-center justify-center p-4">
-            <Image
-              src={images[0] || "/placeholder.svg"}
-              alt={name}
-              width={180}
-              height={180}
-              className="object-contain h-full w-auto group-hover:scale-105 transition-transform"
-            />
-          </div>
-        </Link>
-
-        {/* Info */}
-        <div className="p-3">
-          <h3 className="text-sm font-medium text-gray-900 line-clamp-2 min-h-[2.5rem] mb-1">
-            <Link href={`/products/${slug}`} className="hover:text-brand transition-colors">
-              {name}
-            </Link>
-          </h3>
-
-          {/* Price */}
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="text-brand font-bold font-mono text-base tracking-tight">
-              {formatPrice(salePrice ?? price)}
-            </span>
-            {salePrice && (
-              <span className="text-gray-400 text-xs font-mono line-through">
-                {formatPrice(price)}
-              </span>
-            )}
-          </div>
-
-          {/* Rating */}
-          <div className="flex items-center gap-1 mb-2">
-            <div className="flex">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star
-                  key={i}
-                  className={`h-3.5 w-3.5 ${
-                    i < Math.floor(rating)
-                      ? "text-yellow-400 fill-yellow-400"
-                      : "text-gray-300"
-                  }`}
-                />
-              ))}
+    <div className="group transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-1">
+      {/* Double Bezel — Outer Shell */}
+      <div className="p-[3px] rounded-[1.5rem] bg-black/[0.02] ring-1 ring-black/[0.04] transition-shadow duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
+        {/* Inner Core */}
+        <div className="rounded-[calc(1.5rem-3px)] bg-white overflow-hidden shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]">
+          {/* Image */}
+          <Link href={`/products/${slug}`} className="block relative">
+            <div className="relative aspect-square flex items-center justify-center p-8 bg-gradient-to-b from-dust-grey-50/50 to-white">
+              <Image
+                src={images[0] || "/placeholder.svg"}
+                alt={name}
+                width={280}
+                height={280}
+                className="object-contain max-h-full w-auto transition-transform duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-105"
+              />
+              {/* Wishlist — Glass Circle */}
+              <button
+                onClick={handleToggleWishlist}
+                className={`absolute top-4 right-4 p-2.5 rounded-full backdrop-blur-md transition-all duration-300 ${
+                  inWishlist
+                    ? "bg-sale/10 text-sale"
+                    : "bg-white/60 text-dust-grey-400 hover:bg-white/80 hover:text-dust-grey-600"
+                }`}
+              >
+                <Heart className="h-4 w-4" strokeWidth={1.5} fill={inWishlist ? "currentColor" : "none"} />
+              </button>
             </div>
-            <span className="text-xs text-gray-500">({reviewCount})</span>
-          </div>
+          </Link>
 
-          {/* Add to Cart */}
-          <button
-            onClick={handleAddToCart}
-            className="w-full flex items-center justify-center gap-1.5 bg-brand text-white text-sm font-medium py-2 rounded-md hover:bg-brand-dark transition-colors"
-          >
-            <ShoppingCart className="h-3.5 w-3.5" />
-            Add to Cart
-          </button>
+          {/* Info */}
+          <div className="px-5 pb-5 pt-4">
+            <h3 className="font-semibold text-[15px] text-dust-grey-900 leading-snug mb-2 line-clamp-2 min-h-[2.5rem]">
+              <Link href={`/products/${slug}`} className="hover:text-brand transition-colors duration-300">
+                {name}
+              </Link>
+            </h3>
+
+            {/* Rating */}
+            <div className="mb-3">
+              <StarRating rating={rating} size="sm" />
+            </div>
+
+            {/* Price */}
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <span className="font-bold text-xl text-dust-grey-900 tracking-[-0.02em]">
+                {formatPrice(salePrice ?? price)}
+              </span>
+              {salePrice && (
+                <span className="font-medium text-base text-dust-grey-300 line-through">
+                  {formatPrice(price)}
+                </span>
+              )}
+              {discount > 0 && (
+                <span className="bg-sale/10 text-sale text-[11px] font-semibold px-2.5 py-1 rounded-full">
+                  -{discount}%
+                </span>
+              )}
+              {badge && !salePrice && (
+                <span className="bg-brand/10 text-brand text-[11px] font-semibold px-2.5 py-1 rounded-full">
+                  {badge}
+                </span>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>

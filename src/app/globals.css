@@ -7,14 +7,80 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
+  --font-sans: var(--font-geist-mono);
+  --font-display: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --color-brand: #00B900;
-  --color-brand-dark: #009A00;
-  --color-brand-light: #33CC33;
-  --color-brand-text: #007B00;
-  --color-navy: #0D0D2B;
-  --color-navy-light: #1A1A40;
+  /* Brand: hunter-green */
+  --color-brand: #507c58;
+  --color-brand-dark: #3c5d42;
+  --color-brand-light: #83af8b;
+  --color-brand-text: #283e2c;
+
+  /* Surfaces: dust-grey */
+  --color-surface: #f4f3f0;
+  --color-surface-alt: #e9e8e2;
+  --color-sale: #c04040;
+
+  /* Palette scales */
+  --color-dust-grey-50: #f4f3f0;
+  --color-dust-grey-100: #e9e8e2;
+  --color-dust-grey-200: #d4d0c4;
+  --color-dust-grey-300: #beb9a7;
+  --color-dust-grey-400: #a8a18a;
+  --color-dust-grey-500: #938a6c;
+  --color-dust-grey-600: #756e57;
+  --color-dust-grey-700: #585341;
+  --color-dust-grey-800: #3b372b;
+  --color-dust-grey-900: #1d1c16;
+  --color-dust-grey-950: #15130f;
+
+  --color-dry-sage-50: #f3f5f0;
+  --color-dry-sage-100: #e7ebe0;
+  --color-dry-sage-200: #cfd6c2;
+  --color-dry-sage-300: #b7c2a3;
+  --color-dry-sage-400: #9ead85;
+  --color-dry-sage-500: #869966;
+  --color-dry-sage-600: #6b7a52;
+  --color-dry-sage-700: #515c3d;
+  --color-dry-sage-800: #363d29;
+  --color-dry-sage-900: #1b1f14;
+  --color-dry-sage-950: #13150e;
+
+  --color-fern-50: #f0f5f0;
+  --color-fern-100: #e1eae1;
+  --color-fern-200: #c3d6c2;
+  --color-fern-300: #a4c1a4;
+  --color-fern-400: #86ac86;
+  --color-fern-500: #689867;
+  --color-fern-600: #537953;
+  --color-fern-700: #3e5b3e;
+  --color-fern-800: #2a3d29;
+  --color-fern-900: #151e15;
+  --color-fern-950: #0f150e;
+
+  --color-hunter-green-50: #eff5f0;
+  --color-hunter-green-100: #e0ebe2;
+  --color-hunter-green-200: #c1d7c5;
+  --color-hunter-green-300: #a2c3a8;
+  --color-hunter-green-400: #83af8b;
+  --color-hunter-green-500: #639c6e;
+  --color-hunter-green-600: #507c58;
+  --color-hunter-green-700: #3c5d42;
+  --color-hunter-green-800: #283e2c;
+  --color-hunter-green-900: #141f16;
+  --color-hunter-green-950: #0e160f;
+
+  --color-pine-teal-50: #f0f5f2;
+  --color-pine-teal-100: #e0ebe6;
+  --color-pine-teal-200: #c2d6cc;
+  --color-pine-teal-300: #a3c2b3;
+  --color-pine-teal-400: #85ad99;
+  --color-pine-teal-500: #669980;
+  --color-pine-teal-600: #527a66;
+  --color-pine-teal-700: #3d5c4d;
+  --color-pine-teal-800: #293d33;
+  --color-pine-teal-900: #141f1a;
+  --color-pine-teal-950: #0e1512;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -54,38 +120,38 @@
 }
 
 :root {
-  --background: oklch(0.985 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --background: #faf9f7;
+  --foreground: #1d1c16;
+  --card: #ffffff;
+  --card-foreground: #1d1c16;
+  --popover: #ffffff;
+  --popover-foreground: #1d1c16;
+  --primary: #507c58;
+  --primary-foreground: #ffffff;
+  --secondary: #f4f3f0;
+  --secondary-foreground: #1d1c16;
+  --muted: #f4f3f0;
+  --muted-foreground: #756e57;
+  --accent: #e7ebe0;
+  --accent-foreground: #1d1c16;
+  --destructive: #c04040;
+  --border: #e9e8e2;
+  --input: #e9e8e2;
+  --ring: #83af8b;
   --chart-1: oklch(0.809 0.105 251.813);
   --chart-2: oklch(0.623 0.214 259.815);
   --chart-3: oklch(0.546 0.245 262.881);
   --chart-4: oklch(0.488 0.243 264.376);
   --chart-5: oklch(0.424 0.199 265.638);
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar: #faf9f7;
+  --sidebar-foreground: #1d1c16;
+  --sidebar-primary: #507c58;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e7ebe0;
+  --sidebar-accent-foreground: #1d1c16;
+  --sidebar-border: #e9e8e2;
+  --sidebar-ring: #83af8b;
 }
 
 @layer base {
@@ -98,9 +164,31 @@
   html {
     @apply font-sans;
   }
-  :focus-visible {
-    @apply outline-2 outline-offset-2 outline-brand;
-  }
+}
+
+/* Noise texture overlay for editorial paper feel */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* Admin form inputs */
+.form-input {
+  @apply w-full h-10 px-4 rounded-xl bg-dust-grey-50/50 ring-1 ring-black/[0.04] text-[14px] text-dust-grey-900 placeholder:text-dust-grey-300 focus:outline-none focus:ring-2 focus:ring-brand/20 focus:bg-white transition-all duration-300;
+}
+select.form-input {
+  @apply appearance-none bg-[right_1rem_center] bg-[length:1rem_1rem] bg-no-repeat;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23938a6c' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+textarea.form-input {
+  @apply h-auto py-3;
 }
 
 @media (prefers-reduced-motion: reduce) {
