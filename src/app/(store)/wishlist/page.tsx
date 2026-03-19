@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Heart, Trash2 } from "lucide-react";
 import { useWishlistStore } from "@/store/wishlist-store";
 import { useCartStore } from "@/store/cart-store";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { formatPrice } from "@/lib/utils";
 import { StarRating } from "@/components/ui/star-rating";
@@ -13,6 +14,17 @@ import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 export default function WishlistPage() {
   const { items, removeItem } = useWishlistStore();
   const addItem = useCartStore((s) => s.addItem);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) {
+    return (
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-0 py-20 text-center">
+        <p className="text-black/40">Loading wishlist...</p>
+      </div>
+    );
+  }
 
   if (items.length === 0) {
     return (

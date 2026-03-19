@@ -26,9 +26,12 @@ interface Product {
   category: { name: string };
 }
 
+const TABS = ["Product Details", "Specifications"] as const;
+
 export function ProductDetail({ product }: { product: Product }) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [activeTab, setActiveTab] = useState<(typeof TABS)[number]>("Product Details");
   const addItem = useCartStore((s) => s.addItem);
   const { toggleItem, isInWishlist } = useWishlistStore();
   const inWishlist = isInWishlist(product.id);
@@ -221,6 +224,76 @@ export function ProductDetail({ product }: { product: Product }) {
         >
           {inWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
         </button>
+      </div>
+
+      {/* Tabs Section */}
+      <div className="lg:col-span-2 mt-16">
+        <div className="flex items-center border-b border-black/10">
+          {TABS.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-8 py-3 text-xl font-medium transition-colors ${
+                activeTab === tab
+                  ? "text-black border-b-2 border-black"
+                  : "text-black/60 hover:text-black"
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        <div className="py-8">
+          {activeTab === "Product Details" && (
+            <div className="max-w-3xl">
+              <p className="text-[15px] text-dust-grey-500 leading-[1.8]">
+                {product.description}
+              </p>
+              <div className="flex flex-wrap gap-x-8 gap-y-3 mt-6 text-[14px] text-dust-grey-400">
+                <span>Brand: <strong className="text-dust-grey-900">{product.brand}</strong></span>
+                <span>Category: <strong className="text-dust-grey-900">{product.category.name}</strong></span>
+                {product.componentType && (
+                  <span>Type: <strong className="text-dust-grey-900">{product.componentType}</strong></span>
+                )}
+                <span>
+                  Availability:{" "}
+                  {product.stock > 0 ? (
+                    <strong className="text-brand">In Stock ({product.stock})</strong>
+                  ) : (
+                    <strong className="text-sale">Out of Stock</strong>
+                  )}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "Specifications" && (
+            <div className="max-w-3xl">
+              {specEntries.length > 0 ? (
+                <table className="w-full text-[15px]">
+                  <tbody>
+                    {specEntries.map(([key, value], i) => (
+                      <tr
+                        key={key}
+                        className={i % 2 === 0 ? "bg-surface" : "bg-white"}
+                      >
+                        <td className="px-5 py-3.5 font-medium text-dust-grey-900 w-1/3">
+                          {key}
+                        </td>
+                        <td className="px-5 py-3.5 text-dust-grey-500">
+                          {String(value)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <p className="text-black/40">No specifications available for this product.</p>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -18,7 +18,7 @@ export async function POST(request: Request) {
     // Ensure user exists in Prisma database
     await syncUser(user);
 
-    const { orderId, items } = await request.json();
+    const { orderId, items, couponCode } = await request.json();
 
     if (!orderId) {
       return NextResponse.json(
@@ -30,11 +30,25 @@ export async function POST(request: Request) {
     const captureData = await capturePayPalPayment(orderId);
 
     if (captureData.status === "COMPLETED") {
-      const total = items.reduce(
+      const subtotal = items.reduce(
         (sum: number, item: { price: number; quantity: number }) =>
           sum + item.price * item.quantity,
         0
       );
+
+      // Apply coupon discount
+      let total = subtotal;
+      let couponId: string | null = null;
+      if (couponCode) {
+        const coupon = await prisma.coupon.findUnique({
+          where: { code: couponCode },
+        });
+        const notExpired = !coupon?.expiresAt || new Date(coupon.expiresAt) > new Date();
+        if (coupon && coupon.isActive && notExpired) {
+          total = subtotal - subtotal * (coupon.discountPercent / 100);
+          couponId = coupon.id;
+        }
+      }
 
       const order = await withRetry(() =>
         prisma.order.create({
@@ -43,6 +57,7 @@ export async function POST(request: Request) {
             total,
             status: "COMPLETED",
             paypalOrderId: orderId,
+            couponId,
             items: {
               create: items.map(
                 (item: {

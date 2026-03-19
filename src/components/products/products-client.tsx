@@ -47,16 +47,23 @@ export function ProductsClient({
   allProducts,
   categories,
   initialSearch,
+  initialCategory,
+  initialSale,
+  initialNew,
 }: {
   allProducts: Product[];
   categories: Category[];
   initialSearch?: string;
+  initialCategory?: string;
+  initialSale?: boolean;
+  initialNew?: boolean;
 }) {
-  const [category, setCategory] = useState<string | null>(null);
+  const [category, setCategory] = useState<string | null>(initialCategory ?? null);
   const [sort, setSort] = useState("popular");
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState<number | null>(null);
-  const [onSale, setOnSale] = useState(false);
+  const [onSale, setOnSale] = useState(initialSale ?? false);
+  const [newArrivals, setNewArrivals] = useState(initialNew ?? false);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [search] = useState(initialSearch || "");
 
@@ -98,6 +105,10 @@ export function ProductsClient({
       result = result.filter((p) => p.salePrice !== null);
     }
 
+    if (newArrivals) {
+      result = result.filter((p) => p.isNewArrival);
+    }
+
     result = [...result].sort((a, b) => {
       switch (sort) {
         case "price-asc":
@@ -127,6 +138,7 @@ export function ProductsClient({
     setSelectedBrands([]);
     setPriceRange(null);
     setOnSale(false);
+    setNewArrivals(false);
   };
 
   const currentCategoryName = category
@@ -230,6 +242,25 @@ export function ProductsClient({
         </div>
       </button>
 
+      {/* New Arrivals */}
+      <button
+        onClick={() => setNewArrivals(!newArrivals)}
+        className={`flex items-center justify-between text-base transition-colors ${
+          newArrivals ? "text-black font-medium" : "text-black/60 hover:text-black"
+        }`}
+      >
+        New Arrivals Only
+        <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
+          newArrivals ? "bg-brand border-brand" : "border-black/20"
+        }`}>
+          {newArrivals && (
+            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          )}
+        </div>
+      </button>
+
       {/* Apply button */}
       <button
         onClick={() => setMobileFiltersOpen(false)}
@@ -297,7 +328,7 @@ export function ProductsClient({
           )}
 
           {/* Active filters */}
-          {(category || selectedBrands.length > 0 || priceRange !== null || onSale) && (
+          {(category || selectedBrands.length > 0 || priceRange !== null || onSale || newArrivals) && (
             <div className="flex flex-wrap gap-2 mb-6">
               {category && (
                 <span className="bg-surface text-sm px-3 py-1.5 rounded-full flex items-center gap-1.5">
@@ -321,6 +352,12 @@ export function ProductsClient({
                 <span className="bg-surface text-sm px-3 py-1.5 rounded-full flex items-center gap-1.5">
                   On Sale
                   <button onClick={() => setOnSale(false)}><X className="h-3.5 w-3.5" /></button>
+                </span>
+              )}
+              {newArrivals && (
+                <span className="bg-surface text-sm px-3 py-1.5 rounded-full flex items-center gap-1.5">
+                  New Arrivals
+                  <button onClick={() => setNewArrivals(false)}><X className="h-3.5 w-3.5" /></button>
                 </span>
               )}
               <button

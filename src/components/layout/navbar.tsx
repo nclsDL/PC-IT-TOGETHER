@@ -12,6 +12,7 @@ import {
   LogOut,
   LogIn,
   UserPlus,
+  Package,
   ChevronDown,
   ArrowUpRight,
 } from "lucide-react";
@@ -190,6 +191,10 @@ export function Navbar() {
                       <DropdownMenuItem onClick={() => router.push("/cart")} className="rounded-xl">
                         <ShoppingCart className="mr-2 h-4 w-4" strokeWidth={1.5} />
                         Cart
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => router.push("/orders")} className="rounded-xl">
+                        <Package className="mr-2 h-4 w-4" strokeWidth={1.5} />
+                        Orders
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem onClick={async () => { const supabase = createClient(); await supabase.auth.signOut(); router.refresh(); }} className="rounded-xl">

@@ -12,7 +12,7 @@ import { formatPrice } from "@/lib/utils";
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, getTotal, clearCart } = useCartStore();
+  const { items, getSubtotal, getDiscount, getTotal, coupon, clearCart } = useCartStore();
   const [mounted, setMounted] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
@@ -37,7 +37,9 @@ export default function CheckoutPage() {
 
   if (!user) return null;
 
-  const total = getTotal();
+  const subtotal = mounted ? getSubtotal() : 0;
+  const discount = mounted ? getDiscount() : 0;
+  const total = mounted ? getTotal() : 0;
 
   if (items.length === 0) {
     return (
@@ -99,8 +101,14 @@ export default function CheckoutPage() {
             <div className="space-y-3 mb-6">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Subtotal</span>
-                <span className="font-mono">{formatPrice(total)}</span>
+                <span className="font-mono">{formatPrice(subtotal)}</span>
               </div>
+              {coupon && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-brand">Discount ({coupon.code} &minus;{coupon.discountPercent}%)</span>
+                  <span className="font-mono text-brand">&minus;{formatPrice(discount)}</span>
+                </div>
+              )}
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Shipping</span>
                 <span className="text-brand">Free</span>
@@ -112,11 +120,37 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {paypalClientId && paypalClientId !== "your-paypal-sandbox-client-id" ? (
+            {total <= 0 ? (
+              <button
+                onClick={async () => {
+                  const res = await fetch("/api/orders/free", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      items: items.map((i) => ({
+                        productId: i.id,
+                        quantity: i.quantity,
+                        price: i.salePrice ?? i.price,
+                      })),
+                      couponCode: coupon?.code ?? null,
+                    }),
+                  });
+                  if (res.ok) {
+                    clearCart();
+                    router.push("/checkout/success");
+                  } else {
+                    toast.error("Failed to place order");
+                  }
+                }}
+                className="w-full bg-brand text-white py-3 rounded-lg font-semibold hover:bg-brand-dark transition-colors"
+              >
+                Place Free Order
+              </button>
+            ) : paypalClientId && paypalClientId !== "your-paypal-sandbox-client-id" ? (
               <PayPalScriptProvider
                 options={{
                   clientId: paypalClientId,
-                  currency: "USD",
+                  currency: "PHP",
                 }}
               >
                 <PayPalButtons
@@ -141,6 +175,7 @@ export default function CheckoutPage() {
                           quantity: i.quantity,
                           price: i.salePrice ?? i.price,
                         })),
+                        couponCode: coupon?.code ?? null,
                       }),
                     });
 
@@ -163,9 +198,25 @@ export default function CheckoutPage() {
                   .env file.
                 </p>
                 <button
-                  onClick={() => {
-                    clearCart();
-                    router.push("/checkout/success");
+                  onClick={async () => {
+                    const res = await fetch("/api/orders/free", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        items: items.map((i) => ({
+                          productId: i.id,
+                          quantity: i.quantity,
+                          price: i.salePrice ?? i.price,
+                        })),
+                        couponCode: coupon?.code ?? null,
+                      }),
+                    });
+                    if (res.ok) {
+                      clearCart();
+                      router.push("/checkout/success");
+                    } else {
+                      toast.error("Failed to simulate payment");
+                    }
                   }}
                   className="mt-3 bg-brand text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-brand-dark transition-colors"
                 >

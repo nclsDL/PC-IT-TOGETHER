@@ -4,16 +4,53 @@ import Image from "next/image";
 import Link from "next/link";
 import { Minus, Plus, Trash2, ShoppingCart, ArrowRight, Tag } from "lucide-react";
 import { useCartStore } from "@/store/cart-store";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { formatPrice } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 
 export default function CartPage() {
-  const { items, removeItem, updateQuantity, getTotal } = useCartStore();
+  const { items, removeItem, updateQuantity, getSubtotal, getDiscount, getTotal, coupon, setCoupon } = useCartStore();
   const [promoCode, setPromoCode] = useState("");
+  const [promoLoading, setPromoLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
+  useEffect(() => setMounted(true), []);
+
+  const subtotal = getSubtotal();
+  const discount = getDiscount();
   const total = getTotal();
+
+  if (!mounted) {
+    return (
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-0 py-20 text-center">
+        <p className="text-black/40">Loading cart...</p>
+      </div>
+    );
+  }
+
+  const handleApplyPromo = async () => {
+    if (!promoCode.trim()) return;
+    setPromoLoading(true);
+    try {
+      const res = await fetch("/api/coupons/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: promoCode.trim() }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setCoupon(data);
+        toast.success(`Promo code "${data.code}" applied! ${data.discountPercent}% off`);
+      } else {
+        toast.error(data.error || "Invalid promo code");
+      }
+    } catch {
+      toast.error("Failed to validate promo code");
+    } finally {
+      setPromoLoading(false);
+    }
+  };
 
   if (items.length === 0) {
     return (
@@ -122,8 +159,16 @@ export default function CartPage() {
           <div className="flex flex-col gap-5">
             <div className="flex items-center justify-between text-xl">
               <span className="text-black/60">Subtotal</span>
-              <span className="font-bold text-black text-right">{formatPrice(total)}</span>
+              <span className="font-bold text-black text-right">{formatPrice(subtotal)}</span>
             </div>
+            {coupon && (
+              <div className="flex items-center justify-between text-xl">
+                <span className="text-brand">
+                  Discount ({coupon.code} &minus;{coupon.discountPercent}%)
+                </span>
+                <span className="font-bold text-brand text-right">&minus;{formatPrice(discount)}</span>
+              </div>
+            )}
             <div className="flex items-center justify-between text-xl">
               <span className="text-black/60">Delivery Fee</span>
               <span className="font-bold text-black text-right">Free</span>
@@ -141,20 +186,36 @@ export default function CartPage() {
           <div className="flex gap-3 mt-6">
             <div className="flex-1 flex items-center gap-3 bg-surface rounded-full px-4 py-3">
               <Tag className="h-6 w-6 text-black/40" />
-              <input
-                type="text"
-                value={promoCode}
-                onChange={(e) => setPromoCode(e.target.value)}
-                placeholder="Add promo code"
-                className="flex-1 bg-transparent text-base outline-none placeholder:text-black/40"
-              />
+              {coupon ? (
+                <div className="flex-1 flex items-center justify-between">
+                  <span className="text-base font-medium text-brand">{coupon.code}</span>
+                  <button
+                    onClick={() => { setCoupon(null); setPromoCode(""); toast.success("Promo code removed"); }}
+                    className="text-xs text-black/40 hover:text-black/60"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ) : (
+                <input
+                  type="text"
+                  value={promoCode}
+                  onChange={(e) => setPromoCode(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleApplyPromo()}
+                  placeholder="Add promo code"
+                  className="flex-1 bg-transparent text-base outline-none placeholder:text-black/40"
+                />
+              )}
             </div>
-            <button
-              onClick={() => toast.info("Promo codes coming soon!")}
-              className="bg-brand text-white font-medium text-base px-4 py-3 rounded-full hover:bg-brand-dark transition-colors"
-            >
-              Apply
-            </button>
+            {!coupon && (
+              <button
+                onClick={handleApplyPromo}
+                disabled={promoLoading}
+                className="bg-brand text-white font-medium text-base px-4 py-3 rounded-full hover:bg-brand-dark transition-colors disabled:opacity-50"
+              >
+                {promoLoading ? "..." : "Apply"}
+              </button>
+            )}
           </div>
 
           {/* Checkout */}

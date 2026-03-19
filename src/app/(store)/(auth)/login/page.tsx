@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Monitor, Cpu } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 
@@ -28,6 +29,7 @@ export default function LoginPage() {
       if (error) {
         toast.error("Invalid email or password");
       } else {
+        await fetch("/api/auth/sync", { method: "POST" }).catch(() => {});
         toast.success("Logged in successfully");
         router.push("/");
         router.refresh();
@@ -52,23 +54,42 @@ export default function LoginPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[500px]">
-        {/* Left Side - Illustration */}
-        <div className="hidden lg:flex items-center justify-center bg-gray-100 rounded-2xl min-h-[500px]">
-          <div className="text-center p-8">
-            <div className="flex justify-center gap-4 mb-6">
-              <Monitor className="h-20 w-20 text-gray-400" />
-              <Cpu className="h-16 w-16 text-brand/30 mt-4" />
-            </div>
-            <div className="flex gap-1 justify-center mb-4">
-              {[0, 1, 2, 3].map((i) => (
-                <div
-                  key={i}
-                  className={`w-2 h-2 rounded-full ${
-                    i === 0 ? "bg-brand" : "bg-gray-300"
-                  }`}
+        {/* Left Side - Product Showcase */}
+        <div className="hidden lg:flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl min-h-[500px] relative overflow-hidden">
+          {/* Decorative background circles */}
+          <div className="absolute top-10 left-10 w-40 h-40 bg-brand/5 rounded-full blur-2xl" />
+          <div className="absolute bottom-10 right-10 w-56 h-56 bg-brand/10 rounded-full blur-3xl" />
+
+          <div className="relative z-10 grid grid-cols-2 gap-4 p-10">
+            {[
+              { src: "/products/gpus/rtx-4080-super.png", label: "GPUs" },
+              { src: "/products/cpus/ryzen-7-7800x3d.png", label: "CPUs" },
+              { src: "/products/motherboards/asus-b650e-f.png", label: "Motherboards" },
+              { src: "/products/coolers/noctua-nh-d15.png", label: "Coolers" },
+            ].map((item) => (
+              <div
+                key={item.label}
+                className="bg-white/70 backdrop-blur-sm rounded-xl p-4 flex flex-col items-center gap-2 shadow-sm"
+              >
+                <Image
+                  src={item.src}
+                  alt={item.label}
+                  width={120}
+                  height={120}
+                  className="object-contain h-[100px] w-auto"
                 />
-              ))}
-            </div>
+                <span className="text-xs font-semibold text-black/50 uppercase tracking-wide">
+                  {item.label}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Bottom tagline */}
+          <div className="absolute bottom-6 left-0 right-0 text-center">
+            <p className="text-sm font-semibold text-black/30 tracking-widest uppercase">
+              Build Your Dream PC
+            </p>
           </div>
         </div>
 

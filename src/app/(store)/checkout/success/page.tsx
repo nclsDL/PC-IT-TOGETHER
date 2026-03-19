@@ -14,16 +14,16 @@ export default function CheckoutSuccessPage() {
       </p>
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <Link
-          href="/products"
+          href="/orders"
           className="bg-brand text-white px-8 py-3 rounded-lg font-semibold hover:bg-brand-dark transition-colors"
         >
-          Continue Shopping
+          View Orders
         </Link>
         <Link
-          href="/"
+          href="/products"
           className="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
         >
-          Back to Home
+          Continue Shopping
         </Link>
       </div>
     </div>

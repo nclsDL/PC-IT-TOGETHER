@@ -6,7 +6,7 @@ import { ProductsClient } from "@/components/products/products-client";
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; category?: string; sale?: string; new?: string }>;
 }) {
   const params = await searchParams;
 
@@ -47,6 +47,9 @@ export default async function ProductsPage({
       allProducts={JSON.parse(JSON.stringify(products))}
       categories={categories}
       initialSearch={params.q}
+      initialCategory={params.category}
+      initialSale={params.sale === "true"}
+      initialNew={params.new === "true"}
     />
   );
 }

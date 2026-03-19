@@ -72,21 +72,6 @@ export default async function ProductPage({
 
       <ProductDetail product={product} />
 
-      {/* Tabs Section */}
-      <div className="mt-16">
-        <div className="flex items-center border-b border-black/10">
-          <button className="px-8 py-3 text-xl font-medium text-black/60 hover:text-black transition-colors">
-            Product Details
-          </button>
-          <button className="px-8 py-3 text-xl font-medium text-black border-b-2 border-black">
-            Specifications
-          </button>
-          <button className="px-8 py-3 text-xl font-medium text-black/60 hover:text-black transition-colors">
-            FAQs
-          </button>
-        </div>
-      </div>
-
       {/* You Might Also Like */}
       {relatedProducts.length > 0 && (
         <section className="mt-16">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Check,
   ShoppingCart,
@@ -112,6 +112,9 @@ export function BuilderClient({ products, prebuilts }: BuilderClientProps) {
   } = useBuilderStore();
   const addItem = useCartStore((s) => s.addItem);
   const [showMore, setShowMore] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   const currentSlot = BUILDER_STEPS[currentStep].slot;
   const currentType = componentTypeMap[currentSlot];
@@ -123,9 +126,9 @@ export function BuilderClient({ products, prebuilts }: BuilderClientProps) {
   const featured = availableProducts.slice(0, 3);
   const moreOptions = availableProducts.slice(3);
 
-  const compatErrors = getAllCompatibilityErrors(selections);
-  const total = getBuildTotal();
-  const selectedCount = getSelectedCount();
+  const compatErrors = mounted ? getAllCompatibilityErrors(selections) : [];
+  const total = mounted ? getBuildTotal() : 0;
+  const selectedCount = mounted ? getSelectedCount() : 0;
 
   const handleSelect = (product: (typeof products)[0]) => {
     const builderProduct: BuilderProduct = {
@@ -261,7 +264,7 @@ export function BuilderClient({ products, prebuilts }: BuilderClientProps) {
               <>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
                   {featured.map((product, i) => {
-                    const isSelected = selections[currentSlot]?.id === product.id;
+                    const isSelected = mounted && selections[currentSlot]?.id === product.id;
                     const badges = i === 0 ? "Best Value" : i === 1 ? "Popular" : undefined;
 
                     return (
@@ -324,7 +327,7 @@ export function BuilderClient({ products, prebuilts }: BuilderClientProps) {
                       <div className="grid sm:grid-cols-3 gap-3">
                         {moreOptions.map((product) => {
                           const isSelected =
-                            selections[currentSlot]?.id === product.id;
+                            mounted && selections[currentSlot]?.id === product.id;
                           return (
                             <button
                               key={product.id}
@@ -386,7 +389,7 @@ export function BuilderClient({ products, prebuilts }: BuilderClientProps) {
               {/* Selected Components */}
               <div className="space-y-2.5 mb-6">
                 {BUILDER_STEPS.map((step) => {
-                  const selected = selections[step.slot];
+                  const selected = mounted ? selections[step.slot] : null;
                   return (
                     <div
                       key={step.slot}
@@ -515,7 +518,7 @@ export function BuilderClient({ products, prebuilts }: BuilderClientProps) {
                     </span>
                   )}
                   <h3 className="font-bold text-gray-900 mb-1">{build.name}</h3>
-                  <p className="text-xs text-gray-500 mb-3 line-clamp-2">
+                  <p className="text-xs text-gray-500 mb-3">
                     {build.description}
                   </p>
                   <p className="text-2xl font-bold text-brand mb-4 font-mono tracking-tight">

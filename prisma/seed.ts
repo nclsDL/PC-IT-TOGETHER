@@ -8,9 +8,6 @@ async function main() {
   await prisma.orderItem.deleteMany();
   await prisma.order.deleteMany();
   await prisma.wishlistItem.deleteMany();
-  await prisma.session.deleteMany();
-  await prisma.account.deleteMany();
-  await prisma.verificationToken.deleteMany();
   await prisma.user.deleteMany();
   await prisma.coupon.deleteMany();
   await prisma.prebuiltBuild.deleteMany();
